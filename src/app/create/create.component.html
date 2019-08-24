@@ -1,12 +1,14 @@
-<form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-        <input type="text" class="form-control" placeholder="Name" formControlName="name">
-    </div>
-    <div class="form-group">
-        <input type="text" class="form-control" placeholder="Age" formControlName="age">
-    </div>
-    <div class="form-group">
-        <input type="text" class="form-control" placeholder="Salary" formControlName="salary">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="col-md-4 col-offset-md-4">
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Name" formControlName="name">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Age" formControlName="age">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Salary" formControlName="salary">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
