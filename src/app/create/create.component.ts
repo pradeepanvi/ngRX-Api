@@ -14,7 +14,7 @@ export class CreateComponent implements OnInit {
   id: number;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private _employeeService: EmployeeService,
     private route: ActivatedRoute,
     private router: Router) { }
@@ -22,7 +22,7 @@ export class CreateComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
-        if(params.id){
+        if (params.id) {
           this.id = params.id;
           this.editMode = true;
         } else {
@@ -33,15 +33,15 @@ export class CreateComponent implements OnInit {
     )
   }
 
-  onSubmit(){
+  onSubmit() {
     let value = this.employeeForm.value;
-    if(this.editMode){
-      console.log('due to 4200 will not work')
-      // this._employeeService.updateEmployee(this.id, value).subscribe(
-      //   (res) => {
-      //     console.log(res);
-      //   }
-      // )
+    if (this.editMode) {
+      // console.log('due to 4200 will not work')
+      this._employeeService.updateEmployee(this.id, value).subscribe(
+        (res) => {
+          console.log(res);
+        }
+      )
     } else {
       this._employeeService.createEmploye(value).subscribe(
         (res) => {
@@ -49,10 +49,11 @@ export class CreateComponent implements OnInit {
         }
       )
     }
+    this.router.navigate(['/'], { relativeTo: this.route });
   }
 
-  private initForm(){
-    if(this.editMode){
+  private initForm() {
+    if (this.editMode) {
       let formValue;
       this._employeeService.getEmployee(this.id).subscribe(
         (res) => {
