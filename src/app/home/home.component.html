@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let employee of employees | async; let i = index">
+    <tr *ngFor="let employee of (employees | async).employees; let i = index">
       <th scope="row">{{i}}</th>
       <td>{{employee.name}}</td>
       <td>{{employee.age}}</td>

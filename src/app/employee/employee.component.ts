@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { EmployeeService } from '../shared/employee.service';
+import { Store } from "@ngrx/store";
+import * as EmployeeActions from "../store/employee.actions";
+import * as fromApp from '../store/app.reducer';
+import { Subscription } from 'rxjs';
+import { Employee } from '../shared/employee.model';
+
 
 @Component({
   selector: 'app-employee',
@@ -8,35 +14,38 @@ import { EmployeeService } from '../shared/employee.service';
   styleUrls: ['./employee.component.scss']
 })
 export class EmployeeComponent implements OnInit {
-  employee:any;
+  employee: Employee;
+  subscription: Subscription;
+  id: number;
 
   constructor(
     private _employeeService: EmployeeService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store<fromApp.AppState>,
   ) { }
 
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
-        this._employeeService.getEmployee(params.id).subscribe(
-          (res) => {
-            this.employee = res
-          }
-        )
+        this.id = params.id;
+      }
+    )
+    this.subscription = this.store.select('employeeList').subscribe(
+      (res) => {
+        this.employee = res.editedEmployee;
       }
     )
   }
 
-  edit(id){
-    this.router.navigate(['/edit/'+id], {relativeTo: this.route})
+  edit() {
+    this.router.navigate(['/edit/' + this.id], { relativeTo: this.route });
+    this.store.dispatch(new EmployeeActions.StartEdit(this.id));
   }
-  delete(id){
-    this._employeeService.deleteEmployee(id).subscribe(
-      (res) => {
-        console.log(res);
-      }
-    )
-  }  
+  delete() {
+    this.store.dispatch(new EmployeeActions.StartEdit(this.id));
+    this.store.dispatch(new EmployeeActions.DeleteEmployee(this.id));
+    this.router.navigate(['/'], { relativeTo: this.route });
+  }
 
 }

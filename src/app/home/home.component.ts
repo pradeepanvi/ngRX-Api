@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { EmployeeService } from '../shared/employee.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Employee } from '../shared/employee.model';
-import { AppState } from '../store/app.state';
 import { Store } from '@ngrx/store';
+
+import * as EmployeeActions from "../store/employee.actions";
+import * as fromApp from '../store/app.reducer';
 
 @Component({
   selector: 'app-home',
@@ -13,42 +14,32 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  getAllEmployees: any;
-  getEmployee: any;
-  createEmploye: any;
-  updateEmployee: any;
   deleteEmployee: any;
 
-  employees: Observable<Employee[]>;
+  employees: Observable<{ employees: Employee[] }>;
 
   constructor(
-    private http: HttpClient,
     private _employeeService: EmployeeService,
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<AppState>) {
-    this.employees = store.select("employee");
+    private store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
-    this._employeeService.getAllEmployees()
-      .subscribe(response => {
-        this.getAllEmployees = response;
-      });
+    this.employees = this.store.select("employeeList");
   }
 
   view(id) {
-    this.router.navigate(['/employee/' + id], { relativeTo: this.route })
+    this.router.navigate(['/employee/' + id], { relativeTo: this.route });
+    this.store.dispatch(new EmployeeActions.StartEdit(id));
   }
   edit(id) {
-    this.router.navigate(['/edit/' + id], { relativeTo: this.route })
+    this.router.navigate(['/edit/' + id], { relativeTo: this.route });
+    this.store.dispatch(new EmployeeActions.StartEdit(id));
   }
   delete(id) {
-    this._employeeService.deleteEmployee(id).subscribe(
-      (res) => {
-        console.log(res);
-      }
-    )
+    this.store.dispatch(new EmployeeActions.StartEdit(id));
+    this.store.dispatch(new EmployeeActions.DeleteEmployee(id))
   }
 
 }
